@@ -1,0 +1,15 @@
+@import 'styles/main';
+
+#App-template {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding-bottom: 20%;
+    background-color: #282c34;
+
+    p {
+        color: white;
+        text-align: center;
+        font-size: calc(18px + 2vmin);
+    }
+}
