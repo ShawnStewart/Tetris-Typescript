@@ -21,5 +21,9 @@
     "react": {
       "version": "detect"
     }
+  },
+  "rules": {
+    "react/self-closing-comp": "warn",
+    "react/prop-types": "off"
   }
 }

@@ -37,7 +37,7 @@ if (isProd) {
     webpackConfig.devtool = 'source-map';
 } else {
     webpackConfig.mode = 'development';
-    webpackConfig.devtool = 'eval-cheap-module-source-map';
+    webpackConfig.devtool = 'eval-source-map';
     webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
