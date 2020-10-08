@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import Tetris from 'components/Tetris';
+import Tetris from '@components/Tetris';
 
 import './app.scss';
 

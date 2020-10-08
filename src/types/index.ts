@@ -1,5 +1,5 @@
-import { ColorCodes } from 'constants';
-import { TetrominoId } from 'constants/tetrominos';
+import { ColorCodes } from '@constants';
+import { TetrominoId } from '@constants/tetrominos';
 
 export type TetrisMatrix = ColorCodes[][];
 

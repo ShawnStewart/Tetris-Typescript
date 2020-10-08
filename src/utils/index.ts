@@ -1,6 +1,6 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, ColorCodes, QUEUE_LENGTH } from 'constants';
-import { TETROMINO_IDS, TETROMINO_SHAPE_MAP } from 'constants/tetrominos';
-import { PlayerPosition, PlayerShapeAndPosition, PlayerState, TetrisMatrix } from 'types';
+import { BOARD_HEIGHT, BOARD_WIDTH, ColorCodes, QUEUE_LENGTH } from '@constants';
+import { TETROMINO_IDS, TETROMINO_SHAPE_MAP } from '@constants/tetrominos';
+import { PlayerPosition, PlayerShapeAndPosition, PlayerState, TetrisMatrix } from '@types';
 
 interface GameBoardAndPlayer extends PlayerShapeAndPosition {
     gameBoard: TetrisMatrix;
@@ -18,9 +18,6 @@ export const checkForCollision = ({
 }: GameBoardAndPlayer): boolean => {
     return playerShape.some((row, rowIdx) => {
         const posY = rowIdx + playerY;
-        // console.log('posY', posY);
-        // console.log('playerX', playerX);
-        // console.log('playerShape.length', playerShape.length);
 
         if (posY < 0 && playerX >= 0 && playerX + playerShape.length - 1 < BOARD_WIDTH) {
             // Player above the game board, but still within x-boundaries
@@ -30,17 +27,37 @@ export const checkForCollision = ({
 
         return row.some((col, colIdx) => {
             const posX = colIdx + playerX;
-            // console.log('checking col', colIdx, 'val', col);
-            // console.log('player pos', playerY, playerX);
-            // console.log('board pos', posY, posX);
-            // console.log('col', col);
-            // console.log('outx', posX, isOutOfBoundsX(posX));
-            // console.log('outy', posY, isOutOfBoundsY(posY));
-            // console.log('gameboard at', posY, posX);
 
             return !!col && (isOutOfBoundsX(posX) || isOutOfBoundsY(posY) || (posY >= 0 && gameBoard[posY][posX] > 1));
         });
     });
+};
+
+export const checkForCompletedRows = (gameBoard: TetrisMatrix): number[] => {
+    const result = [];
+
+    for (let rowIdx = gameBoard.length - 1; rowIdx >= 0; rowIdx--) {
+        if (gameBoard[rowIdx].every((n) => n > 1)) {
+            result.push(rowIdx);
+        }
+
+        if (gameBoard[rowIdx].every((n) => n === 1)) {
+            break;
+        }
+    }
+
+    return result.reverse();
+};
+
+export const clearMatrixRows = (matrix: TetrisMatrix, rows: number[]): TetrisMatrix => {
+    const result = cloneMatrix(matrix);
+
+    for (const row of rows) {
+        result.splice(row, 1);
+        result.unshift(new Array(BOARD_WIDTH).fill(ColorCodes.white));
+    }
+
+    return result;
 };
 
 export const cloneMatrix = (matrix: TetrisMatrix): TetrisMatrix => {
@@ -49,7 +66,6 @@ export const cloneMatrix = (matrix: TetrisMatrix): TetrisMatrix => {
 
 export const getNewPlayer = (tetrominoNumber: number): PlayerState => {
     const tetrominoId = TETROMINO_IDS[Math.floor(Math.random() * TETROMINO_IDS.length)];
-    // const shape = TETROMINO_SHAPE_MAP.O;
     const shape = TETROMINO_SHAPE_MAP[tetrominoId];
     const x = BOARD_WIDTH / 2 - Math.floor(shape.length / 2);
     let y = 0 - shape.length;

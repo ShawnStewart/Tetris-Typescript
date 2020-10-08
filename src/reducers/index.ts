@@ -1,7 +1,3 @@
-import { QUEUE_LENGTH } from 'constants';
-import { PlayerState, TetrisMatrix, TetrisState } from 'types';
-import { getNewPlayer, initializeBoard, initializeQueue, updateGameBoardWithPlayer, updatePlaceholder } from 'utils';
-
 import {
     JUMP_TO_PLACEHOLDER,
     MOVE_PLAYER_DOWN,
@@ -10,7 +6,18 @@ import {
     PLAYER_BLOCKED,
     RESET_PLAYER,
     ROTATE_PLAYER,
-} from './actionTypes';
+    UPDATE_GAME_BOARD,
+} from '@actions/actionTypes';
+import { QUEUE_LENGTH } from '@constants';
+import { PlayerState, TetrisState } from '@types';
+import {
+    clearMatrixRows,
+    getNewPlayer,
+    initializeBoard,
+    initializeQueue,
+    updateGameBoardWithPlayer,
+    updatePlaceholder,
+} from '@utils';
 
 type TetrisActions =
     | {
@@ -22,7 +29,8 @@ type TetrisActions =
               | typeof RESET_PLAYER
               | typeof JUMP_TO_PLACEHOLDER;
       }
-    | { type: typeof ROTATE_PLAYER; payload: Pick<PlayerState, 'shape' | 'x'> };
+    | { type: typeof ROTATE_PLAYER; payload: Pick<PlayerState, 'shape' | 'x'> }
+    | { type: typeof UPDATE_GAME_BOARD; payload: number[] };
 
 export const initialState: TetrisState = {
     gameBoard: initializeBoard(),
@@ -113,6 +121,18 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
                 player: {
                     ...updatedPlayer,
                     placeholder: updatePlaceholder({ gameBoard, ...updatedPlayer }),
+                },
+            };
+        }
+        case UPDATE_GAME_BOARD: {
+            const newGameBoard = clearMatrixRows(gameBoard, action.payload);
+
+            return {
+                ...state,
+                gameBoard: newGameBoard,
+                player: {
+                    ...player,
+                    placeholder: updatePlaceholder({ gameBoard: newGameBoard, ...player }),
                 },
             };
         }

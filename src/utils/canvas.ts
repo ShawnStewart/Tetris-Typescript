@@ -1,16 +1,35 @@
-import { BLOCK_SIZE, COLOR_MAP } from 'constants';
-import { TetrisMatrix } from 'types';
+import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH, COLOR_MAP } from '@constants';
+import { PlayerPosition, TetrisMatrix } from '@types';
 
 export const clearCanvas = (ctx: CanvasRenderingContext2D): void => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 };
 
-interface DrawToCanvas {
+export const clearRows = (ctx: CanvasRenderingContext2D, rows: number[]): void => {
+    // For animated row clearing
+    for (const rowIdx of rows) {
+        for (let colIdx = 0; colIdx < BOARD_WIDTH; colIdx++) {
+            ctx.fillRect(colIdx * BLOCK_SIZE + 1, rowIdx * BLOCK_SIZE + 1, BLOCK_SIZE, BLOCK_SIZE);
+
+            ctx.strokeStyle = '#0000001A';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+
+            ctx.moveTo(colIdx * BLOCK_SIZE + 0.5, rowIdx * BLOCK_SIZE + 0.5);
+            ctx.lineTo(colIdx * BLOCK_SIZE + 0.5, rowIdx * BLOCK_SIZE + BLOCK_SIZE + 0.5);
+            ctx.lineTo(colIdx * BLOCK_SIZE + BLOCK_SIZE + 0.5, rowIdx * BLOCK_SIZE + BLOCK_SIZE + 0.5);
+            ctx.lineTo(colIdx * BLOCK_SIZE + BLOCK_SIZE + 0.5, rowIdx * BLOCK_SIZE + 0.5);
+            ctx.lineTo(colIdx * BLOCK_SIZE + 0.5, rowIdx * BLOCK_SIZE + 0.5);
+
+            ctx.stroke();
+        }
+    }
+};
+
+interface DrawToCanvas extends Partial<PlayerPosition> {
     ctx: CanvasRenderingContext2D;
     fill?: boolean;
     matrix: TetrisMatrix;
-    x?: number;
-    y?: number;
 }
 
 export const drawToCanvas = ({ ctx, fill = true, matrix: m, x = 0, y = 0 }: DrawToCanvas): void => {
@@ -58,4 +77,30 @@ export const drawToCanvas = ({ ctx, fill = true, matrix: m, x = 0, y = 0 }: Draw
             }
         }
     }
+};
+
+export const drawGameOverScreen = (ctx: CanvasRenderingContext2D): void => {
+    ctx.fillStyle = '#000000f0';
+    ctx.fillRect(0, 0, BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE);
+
+    ctx.font = '35px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Game Over', ctx.canvas.width / 2, ctx.canvas.height / 2);
+
+    ctx.font = '16px sans-serif';
+    ctx.fillText('dummy', ctx.canvas.width / 2, ctx.canvas.height / 2 + 35);
+};
+
+export const drawPauseScreen = (ctx: CanvasRenderingContext2D): void => {
+    ctx.fillStyle = '#000000f0';
+    ctx.fillRect(0, 0, BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE);
+
+    ctx.font = '35px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Paused', ctx.canvas.width / 2, ctx.canvas.height / 2);
+
+    ctx.font = '16px sans-serif';
+    ctx.fillText('Press escape to resume', ctx.canvas.width / 2, ctx.canvas.height / 2 + 35);
 };

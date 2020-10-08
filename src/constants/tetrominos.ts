@@ -1,4 +1,4 @@
-import { TetrisMatrix } from 'types';
+import { TetrisMatrix } from '@types';
 
 export const TETROMINO_SHAPE_MAP = {
     I: [
