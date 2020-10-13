@@ -92,6 +92,19 @@ export const drawGameOverScreen = (ctx: CanvasRenderingContext2D): void => {
     ctx.fillText('dummy', ctx.canvas.width / 2, ctx.canvas.height / 2 + 35);
 };
 
+export const drawInitialScreen = (ctx: CanvasRenderingContext2D): void => {
+    ctx.fillStyle = '#000000f0';
+    ctx.fillRect(0, 0, BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE);
+
+    ctx.font = '35px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Welcome to Tetris', ctx.canvas.width / 2, ctx.canvas.height / 2);
+
+    ctx.font = '16px sans-serif';
+    ctx.fillText('Press any key to begin', ctx.canvas.width / 2, ctx.canvas.height / 2 + 35);
+};
+
 export const drawPauseScreen = (ctx: CanvasRenderingContext2D): void => {
     ctx.fillStyle = '#000000f0';
     ctx.fillRect(0, 0, BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE);

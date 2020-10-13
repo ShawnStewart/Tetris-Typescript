@@ -6,7 +6,7 @@ import Queue from '@components/Queue';
 import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH } from '@constants';
 import { initialState, reducer } from '@reducers';
 import { checkForCollision, checkForCompletedRows, rotateMatrix } from '@utils';
-import { clearCanvas, drawGameOverScreen, drawPauseScreen, drawToCanvas } from '@utils/canvas';
+import { clearCanvas, drawGameOverScreen, drawInitialScreen, drawPauseScreen, drawToCanvas } from '@utils/canvas';
 
 import './Tetris.scss';
 
@@ -17,12 +17,11 @@ const Tetris: FC = () => {
     const requestRef = useRef(0);
     const lastTick = useRef(0);
     const [frameCount, setFrameCount] = useState(0);
-    const [isPaused, setIsPaused] = useState(true);
+    const [gameStart, setGameStart] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
     const [gameOver, setGameOver] = useState(false);
 
     const { gameBoard, player, queue } = state;
-
-    // console.log('tetris render', gameBoard);
 
     const _movePlayerDown = useCallback(() => {
         if (player.y === player.placeholder.y) {
@@ -45,7 +44,7 @@ const Tetris: FC = () => {
 
     useEffect(() => {
         // Game loop
-        if (!isPaused && !gameOver) {
+        if (gameStart && !isPaused && !gameOver) {
             requestRef.current = requestAnimationFrame(() => {
                 const now = performance.now();
 
@@ -58,28 +57,38 @@ const Tetris: FC = () => {
                     setFrameCount(frameCount + 1);
                 }
             });
-        }
 
-        return () => cancelAnimationFrame(requestRef.current);
-    }, [_movePlayerDown, frameCount, gameOver, isPaused]);
+            return () => cancelAnimationFrame(requestRef.current);
+        } else {
+            return;
+        }
+    }, [_movePlayerDown, frameCount, gameOver, gameStart, isPaused]);
 
     useEffect(() => {
         // Re-draw the game board and player position
         if (gameBoardCtxRef.current) {
-            clearCanvas(gameBoardCtxRef.current);
-            drawToCanvas({ ctx: gameBoardCtxRef.current, matrix: gameBoard });
-            drawToCanvas({ ctx: gameBoardCtxRef.current, matrix: player.shape, x: player.x, y: player.y });
-            drawToCanvas({ ctx: gameBoardCtxRef.current, matrix: player.shape, fill: false, ...player.placeholder });
-
-            if (gameOver) {
+            if (!gameStart) {
+                console.log('game not started');
+                drawInitialScreen(gameBoardCtxRef.current);
+            } else if (gameOver) {
                 console.log('game over');
                 drawGameOverScreen(gameBoardCtxRef.current);
             } else if (isPaused) {
                 console.log('paused');
                 drawPauseScreen(gameBoardCtxRef.current);
+            } else {
+                clearCanvas(gameBoardCtxRef.current);
+                drawToCanvas({ ctx: gameBoardCtxRef.current, matrix: gameBoard });
+                drawToCanvas({ ctx: gameBoardCtxRef.current, matrix: player.shape, x: player.x, y: player.y });
+                drawToCanvas({
+                    ctx: gameBoardCtxRef.current,
+                    matrix: player.shape,
+                    fill: false,
+                    ...player.placeholder,
+                });
             }
         }
-    }, [gameBoard, gameOver, isPaused, player.placeholder, player.shape, player.x, player.y]);
+    }, [gameBoard, gameOver, gameStart, isPaused, player.placeholder, player.shape, player.x, player.y]);
 
     useEffect(() => {
         const completedRows = checkForCompletedRows(gameBoard);
@@ -91,9 +100,12 @@ const Tetris: FC = () => {
 
     const _handleOnKeyDown: EventHandler<KeyboardEvent> = (event) => {
         const { key } = event;
-        console.log('keyDown', key);
 
         if (gameOver) {
+            return;
+        } else if (!gameStart) {
+            setGameStart(true);
+            console.log('game started');
             return;
         } else if (isPaused) {
             if (key === 'Escape') {
