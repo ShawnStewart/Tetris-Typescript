@@ -2,6 +2,7 @@ import React, { EventHandler, FC, KeyboardEvent, useCallback, useEffect, useRedu
 
 import * as actionTypes from '@actions/actionTypes';
 import MatrixCanvas from '@components/MatrixCanvas';
+import Stats from '@components/Stats';
 import Queue from '@components/Queue';
 import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH } from '@constants';
 import { initialState, reducer } from '@reducers';
@@ -17,11 +18,11 @@ const Tetris: FC = () => {
     const requestRef = useRef(0);
     const lastTick = useRef(0);
     const [frameCount, setFrameCount] = useState(0);
-    const [gameStart, setGameStart] = useState(false);
+    const [gameStart, setGameStart] = useState(true);
     const [isPaused, setIsPaused] = useState(false);
     const [gameOver, setGameOver] = useState(false);
 
-    const { gameBoard, player, queue } = state;
+    const { gameBoard, player, queue, stats } = state;
 
     const _movePlayerDown = useCallback(() => {
         if (player.y === player.placeholder.y) {
@@ -47,8 +48,9 @@ const Tetris: FC = () => {
         if (gameStart && !isPaused && !gameOver) {
             requestRef.current = requestAnimationFrame(() => {
                 const now = performance.now();
+                const tickTime = 250 - 25 * stats.level;
 
-                if (now - 500 >= lastTick.current) {
+                if (now - tickTime >= lastTick.current) {
                     _movePlayerDown();
 
                     lastTick.current = now;
@@ -62,7 +64,7 @@ const Tetris: FC = () => {
         } else {
             return;
         }
-    }, [_movePlayerDown, frameCount, gameOver, gameStart, isPaused]);
+    }, [_movePlayerDown, frameCount, gameOver, gameStart, isPaused, stats.level]);
 
     useEffect(() => {
         // Re-draw the game board and player position
@@ -72,7 +74,7 @@ const Tetris: FC = () => {
                 drawInitialScreen(gameBoardCtxRef.current);
             } else if (gameOver) {
                 console.log('game over');
-                drawGameOverScreen(gameBoardCtxRef.current);
+                drawGameOverScreen(gameBoardCtxRef.current, stats.score);
             } else if (isPaused) {
                 console.log('paused');
                 drawPauseScreen(gameBoardCtxRef.current);
@@ -194,6 +196,7 @@ const Tetris: FC = () => {
                     width={BOARD_WIDTH * BLOCK_SIZE}
                 />
                 <Queue matrices={queue} />
+                <Stats {...stats} />
             </div>
         </div>
     );

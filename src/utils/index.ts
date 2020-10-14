@@ -1,6 +1,6 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, ColorCodes, QUEUE_LENGTH } from '@constants';
 import { TETROMINO_IDS, TETROMINO_SHAPE_MAP } from '@constants/tetrominos';
-import { GameBoardAndPlayer, PlayerPosition, PlayerState, TetrisMatrix } from '@types';
+import { GameBoardAndPlayer, GameStats, PlayerPosition, PlayerState, TetrisMatrix } from '@types';
 
 export const isOutOfBoundsX = (x: number): boolean => x < 0 || x >= BOARD_WIDTH;
 
@@ -50,7 +50,7 @@ export const clearMatrixRows = (matrix: TetrisMatrix, rows: number[]): TetrisMat
 
     for (const row of rows) {
         result.splice(row, 1);
-        result.unshift(new Array(BOARD_WIDTH).fill(ColorCodes.white));
+        result.unshift(new Array(BOARD_WIDTH).fill(ColorCodes.background));
     }
 
     return result;
@@ -97,6 +97,14 @@ export const initializeQueue = (): PlayerState[] => {
     }
 
     return queue;
+};
+
+export const initializeStats = (): GameStats => {
+    return {
+        level: 1,
+        lines: 10,
+        score: 0,
+    };
 };
 
 export const rotateMatrix = (matrix: TetrisMatrix, counterclockwise = false): TetrisMatrix => {

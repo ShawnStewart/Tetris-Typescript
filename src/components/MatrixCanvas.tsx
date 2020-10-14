@@ -3,8 +3,6 @@ import React, { FC, memo, MutableRefObject, ReactElement, useEffect, useRef } fr
 import { TetrisMatrix } from '@types';
 import { clearCanvas, drawToCanvas } from '@utils/canvas';
 
-import './matrixCanvas.scss';
-
 interface MatrixCanvasProps {
     id: string;
     ctxForwardRef?: MutableRefObject<CanvasRenderingContext2D | null>;

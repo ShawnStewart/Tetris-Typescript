@@ -22,9 +22,16 @@ export interface PlayerState extends PlayerShapeAndPosition {
     tetrominoNumber: number;
 }
 
+export interface GameStats {
+    level: number;
+    lines: number;
+    score: number;
+}
+
 export interface TetrisState {
     gameBoard: TetrisMatrix;
     player: PlayerState;
     queue: PlayerState[];
+    stats: GameStats;
     tetrominoCount: number;
 }

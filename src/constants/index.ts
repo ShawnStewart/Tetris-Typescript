@@ -7,7 +7,7 @@ export const QUEUE_LENGTH = 4;
 
 export enum ColorCodes {
     transparent = 0,
-    white = 1,
+    background = 1,
     lightBlue = 2,
     blue = 3,
     orange = 4,
@@ -19,7 +19,7 @@ export enum ColorCodes {
 
 export const COLOR_MAP = {
     [ColorCodes.transparent]: '#ffffff00',
-    [ColorCodes.white]: '#f0f0f0',
+    [ColorCodes.background]: '#000000',
     [ColorCodes.lightBlue]: '#60d9f4',
     [ColorCodes.blue]: '#4051d3',
     [ColorCodes.orange]: '#e8b23f',
