@@ -5,6 +5,43 @@
     height: 100%;
 
     &-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto auto;
+        padding: 8px;
+        border-radius: 8px;
+        background-color: #42464e;
     }
+
+    &-queue {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 175px;
+    }
+
+    &-game-stats {
+        grid-column: 1 / 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 8px;
+        text-align: center;
+        color: #ffffffeb;
+
+        .game-stat-section {
+            display: grid;
+
+            &-header {
+                font-size: 24px;
+            }
+
+            &-value {
+                font-size: 32px;
+            }
+        }
+    }
+}
+
+.tetris-canvas {
+    padding: 8px;
 }

@@ -15,6 +15,7 @@ import {
     getNewPlayer,
     initializeBoard,
     initializeQueue,
+    initializeStats,
     updateGameBoardWithPlayer,
     updatePlaceholder,
 } from '@utils';
@@ -36,11 +37,12 @@ export const initialState: TetrisState = {
     gameBoard: initializeBoard(),
     player: getNewPlayer(1),
     queue: initializeQueue(),
+    stats: initializeStats(),
     tetrominoCount: QUEUE_LENGTH + 1,
 };
 
 export const reducer = (state: TetrisState, action: TetrisActions): TetrisState => {
-    const { gameBoard, player, queue, tetrominoCount } = state;
+    const { gameBoard, player, queue, stats, tetrominoCount } = state;
 
     switch (action.type) {
         case RESET_PLAYER: {
@@ -60,6 +62,10 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
                 player: {
                     ...player,
                     y: player.y + 1,
+                },
+                stats: {
+                    ...stats,
+                    score: stats.score + 1,
                 },
             };
         }
@@ -91,6 +97,7 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
             const newGameBoard = updateGameBoardWithPlayer({ gameBoard, ...player });
 
             return {
+                ...state,
                 gameBoard: newGameBoard,
                 player: {
                     ...queue[0],
@@ -102,14 +109,21 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
         }
         case JUMP_TO_PLACEHOLDER: {
             const newGameBoard = updateGameBoardWithPlayer({ gameBoard, ...player, y: player.placeholder.y });
+            const jumpDistance = player.placeholder.y - player.y;
+            const pointsEarned = jumpDistance + jumpDistance * stats.level;
 
             return {
+                ...state,
                 gameBoard: newGameBoard,
                 player: {
                     ...queue[0],
                     placeholder: updatePlaceholder({ gameBoard: newGameBoard, ...queue[0] }),
                 },
                 queue: [...queue.slice(1), getNewPlayer(tetrominoCount + 1)],
+                stats: {
+                    ...stats,
+                    score: stats.score + pointsEarned,
+                },
                 tetrominoCount: tetrominoCount + 1,
             };
         }
@@ -126,6 +140,17 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
         }
         case UPDATE_GAME_BOARD: {
             const newGameBoard = clearMatrixRows(gameBoard, action.payload);
+            const numRowsCompleted = action.payload.length;
+            const newLinesCount = stats.lines + numRowsCompleted;
+
+            const standardPoints = numRowsCompleted * 100;
+            const levelBonus = stats.level * 500;
+
+            let pointsEarned = standardPoints + levelBonus;
+
+            if (numRowsCompleted === 4) {
+                pointsEarned *= 2;
+            }
 
             return {
                 ...state,
@@ -133,6 +158,12 @@ export const reducer = (state: TetrisState, action: TetrisActions): TetrisState 
                 player: {
                     ...player,
                     placeholder: updatePlaceholder({ gameBoard: newGameBoard, ...player }),
+                },
+                stats: {
+                    ...stats,
+                    level: Math.floor(newLinesCount / 10),
+                    lines: newLinesCount,
+                    score: stats.score + pointsEarned,
                 },
             };
         }

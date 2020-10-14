@@ -4,8 +4,6 @@ import MatrixCanvas from '@components/MatrixCanvas';
 import { BLOCK_SIZE } from '@constants';
 import { PlayerState } from '@types';
 
-import './queue.scss';
-
 interface QueueProps {
     matrices: PlayerState[];
 }
