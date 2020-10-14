@@ -48,7 +48,7 @@ const Tetris: FC = () => {
         if (gameStart && !isPaused && !gameOver) {
             requestRef.current = requestAnimationFrame(() => {
                 const now = performance.now();
-                const tickTime = 250 - 25 * stats.level;
+                const tickTime = 500 - 25 * stats.level;
 
                 if (now - tickTime >= lastTick.current) {
                     _movePlayerDown();
