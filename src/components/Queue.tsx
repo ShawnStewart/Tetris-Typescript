@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
-import MatrixCanvas from '@components/MatrixCanvas';
-import { BLOCK_SIZE } from '@constants';
-import { PlayerState } from '@types';
+import MatrixCanvas from '@/components/MatrixCanvas';
+import { BLOCK_SIZE } from '@/constants';
+import { PlayerState } from '@/types';
 
 interface QueueProps {
     matrices: PlayerState[];

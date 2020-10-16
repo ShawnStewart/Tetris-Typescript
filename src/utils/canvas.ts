@@ -1,5 +1,5 @@
-import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH, COLOR_MAP } from '@constants';
-import { PlayerPosition, TetrisMatrix } from '@types';
+import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH, COLOR_MAP } from '@/constants';
+import { PlayerPosition, TetrisMatrix } from '@/types';
 
 export const clearCanvas = (ctx: CanvasRenderingContext2D): void => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);

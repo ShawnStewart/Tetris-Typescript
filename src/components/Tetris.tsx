@@ -1,13 +1,13 @@
 import React, { EventHandler, FC, KeyboardEvent, useCallback, useEffect, useReducer, useRef, useState } from 'react';
 
-import * as actionTypes from '@actions/actionTypes';
-import MatrixCanvas from '@components/MatrixCanvas';
-import Stats from '@components/Stats';
-import Queue from '@components/Queue';
-import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH } from '@constants';
-import { initialState, reducer } from '@reducers';
-import { checkForCollision, checkForCompletedRows, rotateMatrix } from '@utils';
-import { clearCanvas, drawGameOverScreen, drawInitialScreen, drawPauseScreen, drawToCanvas } from '@utils/canvas';
+import * as actionTypes from '@/actions/actionTypes';
+import MatrixCanvas from '@/components/MatrixCanvas';
+import Stats from '@/components/Stats';
+import Queue from '@/components/Queue';
+import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH } from '@/constants';
+import { initialState, reducer } from '@/reducers';
+import { checkForCollision, checkForCompletedRows, rotateMatrix } from '@/utils';
+import { clearCanvas, drawGameOverScreen, drawInitialScreen, drawPauseScreen, drawToCanvas } from '@/utils/canvas';
 
 import './Tetris.scss';
 
@@ -18,7 +18,7 @@ const Tetris: FC = () => {
     const requestRef = useRef(0);
     const lastTick = useRef(0);
     const [frameCount, setFrameCount] = useState(0);
-    const [gameStart, setGameStart] = useState(true);
+    const [gameStart, setGameStart] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [gameOver, setGameOver] = useState(false);
 

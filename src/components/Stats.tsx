@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { GameStats } from '@types';
+import { GameStats } from '@/types';
 
 const Stats: FC<GameStats> = ({ level, lines, score }) => {
     return (

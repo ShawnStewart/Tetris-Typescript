@@ -1,7 +1,7 @@
 import React, { FC, memo, MutableRefObject, ReactElement, useEffect, useRef } from 'react';
 
-import { TetrisMatrix } from '@types';
-import { clearCanvas, drawToCanvas } from '@utils/canvas';
+import { TetrisMatrix } from '@/types';
+import { clearCanvas, drawToCanvas } from '@/utils/canvas';
 
 interface MatrixCanvasProps {
     id: string;

@@ -7,9 +7,9 @@ import {
     RESET_PLAYER,
     ROTATE_PLAYER,
     UPDATE_GAME_BOARD,
-} from '@actions/actionTypes';
-import { QUEUE_LENGTH } from '@constants';
-import { PlayerState, TetrisState } from '@types';
+} from '@/actions/actionTypes';
+import { QUEUE_LENGTH } from '@/constants';
+import { PlayerState, TetrisState } from '@/types';
 import {
     clearMatrixRows,
     getNewPlayer,
@@ -18,7 +18,7 @@ import {
     initializeStats,
     updateGameBoardWithPlayer,
     updatePlaceholder,
-} from '@utils';
+} from '@/utils';
 
 type TetrisActions =
     | {

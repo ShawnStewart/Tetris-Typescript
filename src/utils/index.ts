@@ -1,6 +1,6 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, ColorCodes, QUEUE_LENGTH } from '@constants';
-import { TETROMINO_IDS, TETROMINO_SHAPE_MAP } from '@constants/tetrominos';
-import { GameBoardAndPlayer, GameStats, PlayerPosition, PlayerState, TetrisMatrix } from '@types';
+import { BOARD_HEIGHT, BOARD_WIDTH, ColorCodes, QUEUE_LENGTH } from '@/constants';
+import { TETROMINO_IDS, TETROMINO_SHAPE_MAP } from '@/constants/tetrominos';
+import { GameBoardAndPlayer, GameStats, PlayerPosition, PlayerState, TetrisMatrix } from '@/types';
 
 export const isOutOfBoundsX = (x: number): boolean => x < 0 || x >= BOARD_WIDTH;
 
